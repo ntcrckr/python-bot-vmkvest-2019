@@ -10,7 +10,7 @@ team_dict = {}
 
 
 class Team:
-  def __init__(self, name, id):
+  def __init__(self, name):
     self.name = name
     self.step = 0
 
