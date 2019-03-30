@@ -40,7 +40,7 @@ def send_welcome(message):
 
 
 def register_name_step(message):
-  try:
+#  try:
     team = Team(message.text)
     team_dict[message.chat.id] = team
     msg = bot.send_message(message.chat.id, "Готовы начать?")
@@ -49,8 +49,8 @@ def register_name_step(message):
       db.write(key + str(team_dict[key].name) + str(team_dict[key].step) + "\n")
     db.close()
     bot.register_next_step_handler(msg, questions_before_step)
-  except Exception as e:
-    bot.send_message(message.chat.id, "Я не понял, напиши название еще раз.")
+#  except Exception as e:
+#    bot.send_message(message.chat.id, "Я не понял, напиши название еще раз.")
 
 
 def questions_before_step(message):
