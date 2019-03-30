@@ -46,7 +46,8 @@ def register_name_step(message):
     msg = bot.send_message(message.chat.id, "Готовы начать?")
     db = open("db.txt", "w")
     for key in team_dict:
-      db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+      s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
+      db.write(s)
     db.close()
     bot.register_next_step_handler(msg, questions_before_step)
 #  except Exception as e:
@@ -61,7 +62,8 @@ def questions_before_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
+    db.write(s)
   db.close()
   msg = bot.send_message(message.chat.id, "Отлично, вот первое задание:")
   bot.send_document(message.chat.id, "BQADAgADFQMAAhn98UhgQ6aV6mCxdwI")
@@ -76,7 +78,8 @@ def questions_first_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
+    db.write(s)
   db.close()
   msg = bot.send_message(message.chat.id, "Браво! Пора приступать к следующему заданию:")
   bot.send_message(message.chat.id, """\
@@ -136,7 +139,8 @@ def questions_second_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
+    db.write(s)
   db.close()
   msg = bot.send_message(message.chat.id, "Верно!")
   bot.send_message(message.chat.id, """\
@@ -160,7 +164,8 @@ def questions_third_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
+    db.write(s)
   db.close()
   msg = bot.send_message(message.chat.id, "Верно! После таких записок становится страшновато, правда? Но не волнуйтесь, лучше решите новое задание:")
   bot.send_message(message.chat.id, """\
@@ -202,7 +207,8 @@ def questions_fourth_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
+    db.write(s)
   db.close()
   msg = bot.send_message(message.chat.id, "Да, Кате прийдется найти себе другой ключ, а Юра пройдет. Вот последнее задание:")
   bot.send_message(message.chat.id, """\
@@ -232,7 +238,7 @@ def questions_fifth_step(message):
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
-    db.write(key, str(team_dict[key].name), str(team_dict[key].step), "\n")
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n"))
   db.close()
   bot.send_message(message.chat.id, "Верно! Поздравляю, вы прошли все задания! Увидимся на квесте.")
 
