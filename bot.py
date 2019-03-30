@@ -12,7 +12,7 @@ team_dict = {}
 class Team:
   def __init__(self, name):
     self.name = name
-    self.step = 0
+    self.step = int(0)
 
 
 #download from db
