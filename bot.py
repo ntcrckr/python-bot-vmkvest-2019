@@ -91,7 +91,7 @@ def questions_first_step(message):
 
 def questions_second_step(message):
   send_info(message, "two")
-  if not message.text in {"space bottle", "spacebottle", "SPACE BOTTLE", "SPACEBOTTLE", "Spacebottle", "Space bottle")
+  if not message.text in {"space bottle", "spacebottle", "SPACE BOTTLE", "SPACEBOTTLE", "Spacebottle", "Space bottle"}
     msg = bot.send_message(message.chat.id, "Нет. Помните, важно подобрать верный ключ.")
     bot.register_next_step_handler(msg, questions_second_step)
     return
