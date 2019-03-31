@@ -16,7 +16,7 @@ class Team:
 
 
 def send_info(message, info):
-  bot.send_message("-396237929", str(info) + str(" : ") + str(message.chat.username) + str(" , ") + str(message.text))
+  bot.send_message("-396237929", str(info) + str(" : ") + str(message.chat.username) + str(" , ") + str(team_dict[message.chat.id]) + str(" , ") + str(message.text))
 
 
 """#download from db
@@ -72,7 +72,7 @@ have i timE yEt?
 
 
 def questions_first_step(message):
-  send_info(message, "one")
+  send_info(message, "1")
   if not message.text in {"runaway", "RUNAWAY", "run away", "RUN AWAY", "Runaway", "Run away"}:
     msg = bot.send_message(message.chat.id, "Неверно, подумайте еще.")
     bot.register_next_step_handler(msg, questions_first_step)
@@ -90,7 +90,7 @@ def questions_first_step(message):
 
 
 def questions_second_step(message):
-  send_info(message, "two")
+  send_info(message, "2")
   if not message.text in {"space bottle", "spacebottle", "SPACE BOTTLE", "SPACEBOTTLE", "Spacebottle", "Space bottle"}:
     msg = bot.send_message(message.chat.id, "Нет. Помните, важно подобрать верный ключ.")
     bot.register_next_step_handler(msg, questions_second_step)
@@ -151,9 +151,9 @@ def questions_second_step(message):
 
 
 def questions_third_step(message):
-  send_info(message, "three")
+  send_info(message, "3")
   if not message.text in {"петух", "Петух"}:
-    msg = bot.send_message(message.chat.id, "Неа, но вот посказка: сначала описаны столбцы.")
+    msg = bot.send_message(message.chat.id, "Неа, но вот подсказка: сначала описаны столбцы.")
     bot.register_next_step_handler(msg, questions_third_step)
     return
   team_dict[message.chat.id].step += 1
@@ -162,7 +162,24 @@ def questions_third_step(message):
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
     db.write(s)
   db.close()
-  msg = bot.send_message(message.chat.id, "Ага, ку-ка-ре-ку! Ну ладно, перейдем к более серьезным заданиям:")
+  msg = bot.send_message(message.chat.id, "Неплохо. Теперь пора проверить вашу сообразительность:")
+  bot.send_document(message.chat.id, "BQADAgADpwMAAvA3AAFJWHKm6xD77C0C")
+  bot.register_next_step_handler(msg, questions_fourth_step)
+
+
+def questions_fourth_step(message):
+  send_info(message, "4")
+  if not message.text in {"сессия", "Сессия", "примета", "Примета"}:
+    msg = bot.send_message(message.chat.id, "Ноуп. Ну давайте, представьте себя Шерлоками!")
+    bot.register_next_step_handler(msg, questions_fourth_step)
+    return
+  team_dict[message.chat.id].step += 1
+  db = open("db.txt", "w")
+  for key in team_dict:
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
+    db.write(s)
+  db.close()
+  msg = bot.send_message(message.chat.id, "Ага, суеверия, они такие... Ну ладно, перейдем к более серьезным заданиям:")
   bot.send_message(message.chat.id, """\
 Катя и Юра пытаются попасть на планету ВМК.
 Для этого им необходимо пройти ворота с электронным замком.
@@ -191,14 +208,14 @@ def questions_third_step(message):
 4 1 6 2 7 8 3 5
 5 8 2 1 3 4 7 6
 """)
-  bot.register_next_step_handler(msg, questions_fourth_step)
+  bot.register_next_step_handler(msg, questions_fifth_step)
 
 
-def questions_fourth_step(message):
-  send_info(message, "four")
+def questions_fifth_step(message):
+  send_info(message, "5")
   if not message.text in {"Юра 8 3 4 5 6 7 1 2", "ключ Юры 8 3 4 5 6 7 1 2", "Ключ Юры 8 3 4 5 6 7 1 2"}:
     msg = bot.send_message(message.chat.id, "Джоан Роулинг сказала мне, что вы ошиблись.")
-    bot.register_next_step_handler(msg, questions_fourth_step)
+    bot.register_next_step_handler(msg, questions_fifth_step)
     return
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
@@ -224,14 +241,14 @@ def questions_fourth_step(message):
 ..
 ..0
 """)
-  bot.register_next_step_handler(msg, questions_fifth_step)
+  bot.register_next_step_handler(msg, questions_sixth_step)
 
 
-def questions_fifth_step(message):
-  send_info(message, "five")
+def questions_sixth_step(message):
+  send_info(message, "6")
   if not message.text in {"вычисления", "Вычисления"}:
     msg = bot.send_message(message.chat.id, "Нет, ПОИЩИТЕ получше.")
-    bot.register_next_step_handler(msg, questions_fifth_step)
+    bot.register_next_step_handler(msg, questions_sixth_step)
     return
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
