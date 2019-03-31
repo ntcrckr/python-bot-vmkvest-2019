@@ -16,7 +16,7 @@ class Team:
 
 
 def send_info(message, info):
-  bot.send_message("-396237929", str(info) + str(" : ") + str(message.chat.username) + str(" , ") + str(team_dict[message.chat.id]) + str(" , ") + str(message.text))
+  bot.send_message("-396237929", str(info) + str(" : ") + str(message.chat.username) + str(" , ") + str(message.text))
 
 
 """#download from db
