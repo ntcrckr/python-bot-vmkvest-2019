@@ -15,63 +15,65 @@ class Team:
     self.step = int(0)
 
 
-#download from db
+def send_info(message, info):
+  bot.send_message("-396237929", str(info) + str(" : ") + str(message.chat.username) + str(" , ") + str(message.text))
+
+
+"""#download from db
 db = open("db.txt", "r")
 for line in db:
   team_dict[line.split()[0]].step = line.split()[2]
-db.close()
+db.close()"""
 
 
-@bot.message_handler(commands=['admingetinfo'])
+"""@bot.message_handler(commands=['admingetinfo'])
 def send_info(message):
   db = open("db.txt", "r")
   for line in db:
     bot.send_message(message.chat.id, line)
-  db.close()
+  db.close()"""
 
 
-# Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
   msg = bot.send_message(message.chat.id, """\
-Приветули, как называется твоя команда?
+Приветули, как мне вас называть?
 """)
   bot.register_next_step_handler(msg, register_name_step)
 
 
 def register_name_step(message):
-#  try:
-    team = Team(message.text)
-    team_dict[message.chat.id] = team
-    msg = bot.send_message(message.chat.id, "Готовы начать?")
-    db = open("db.txt", "w")
-    for key in team_dict:
-      s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
-      db.write(s)
-    db.close()
-    bot.register_next_step_handler(msg, questions_before_step)
-#  except Exception as e:
-#    bot.send_message(message.chat.id, "Я не понял, напиши название еще раз.")
-
-
-def questions_before_step(message):
-  if not message.text in {"Да"}:
-    msg = bot.send_message(message.chat.id, "Нет так нет... Но не откладывайте в долгий ящик!")
-    bot.register_next_step_handler(msg, questions_before_step)
-    return
+  send_info(message, "name")
+  team = Team(message.text)
+  team_dict[message.chat.id] = team
+  msg = bot.send_message(message.chat.id, """\
+Я слышал, вы хотите узнать что-то о пропавших студентах?
+Я расскажу вам всё, что знаю, но я должен быть уверен в том, что могу вам доверять.
+Чтобы понять, почему пропали студенты, вы должны подготовиться, решив эти задания.
+""")
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
   for key in team_dict:
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
     db.write(s)
   db.close()
-  msg = bot.send_message(message.chat.id, "Отлично, вот первое задание:")
-  bot.send_document(message.chat.id, "BQADAgADFQMAAhn98UhgQ6aV6mCxdwI")
+  msg = bot.send_message(message.chat.id, "Начнем с чего-то совсем простого:")
+  bot.send_message(message.chat.id, """\
+На месте происшествия была найдена следующая записка. Что кроется в этом сообщении?
+
+something sTrAnge is happening…
+this mysteriOuS place,
+ these incomprehEnSible things
+  around mE aNd as A wHole…
+i hope i'll fix the sitUaTion.
+have i timE yEt?
+""")
   bot.register_next_step_handler(msg, questions_first_step)
 
 
 def questions_first_step(message):
-  if not message.text in {"space bottle", "spacebottle", "SPACE BOTTLE", "SPACEBOTTLE", "Spacebottle", "Space bottle"}:
+  send_info(message, "one")
+  if not message.text in {"runaway", "RUNAWAY", "run away", "RUN AWAY", "Runaway", "Run away"}:
     msg = bot.send_message(message.chat.id, "Неверно, подумайте еще.")
     bot.register_next_step_handler(msg, questions_first_step)
     return
@@ -81,7 +83,25 @@ def questions_first_step(message):
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
     db.write(s)
   db.close()
-  msg = bot.send_message(message.chat.id, "Браво! Пора приступать к следующему заданию:")
+  msg = bot.send_message(message.chat.id, "Отлично, а знаете про шифр Виженера?")
+  bot.send_document(message.chat.id, "BQADAgADFQMAAhn98UhgQ6aV6mCxdwI")
+  bot.register_next_step_handler(msg, questions_second_step)
+
+
+
+def questions_second_step(message):
+  send_info(message, "two")
+  if not message.text in {"space bottle", "spacebottle", "SPACE BOTTLE", "SPACEBOTTLE", "Spacebottle", "Space bottle")
+    msg = bot.send_message(message.chat.id, "Нет. Помните, важно подобрать верный ключ.")
+    bot.register_next_step_handler(msg, questions_second_step)
+    return
+  team_dict[message.chat.id].step += 1
+  db = open("db.txt", "w")
+  for key in team_dict:
+    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
+    db.write(s)
+  db.close()
+  msg = bot.send_message(message.chat.id, "Отлично, посмотрим, как вы справитесь с кроссвордом:")
   bot.send_message(message.chat.id, """\
 Японское поле 20x20
 
@@ -127,38 +147,13 @@ def questions_first_step(message):
 2 1
 3 3
 """)
-  bot.register_next_step_handler(msg, questions_second_step)
-
-
-
-def questions_second_step(message):
-  if not message.text in {"петух", "Петух"}:
-    msg = bot.send_message(message.chat.id, "Нет. Попробуйте еще.")
-    bot.register_next_step_handler(msg, questions_second_step)
-    return
-  team_dict[message.chat.id].step += 1
-  db = open("db.txt", "w")
-  for key in team_dict:
-    s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
-    db.write(s)
-  db.close()
-  msg = bot.send_message(message.chat.id, "Верно!")
-  bot.send_message(message.chat.id, """\
-На месте происшествия была найдена следующая записка. Что кроется в этом сообщении?
-
-something sTrAnge is happening…
-this mysteriOuS place,
- these incomprehEnSible things
-  around mE aNd as A wHole…
-i hope i“ll fix the sitUaTion.
-have i timE yEt?
-""")
   bot.register_next_step_handler(msg, questions_third_step)
 
 
 def questions_third_step(message):
-  if not message.text in {"runaway", "RUNAWAY", "run away", "RUN AWAY", "Runaway", "Run away"}:
-    msg = bot.send_message(message.chat.id, "Нет, неизвестный хотел передать другое сообщение.")
+  send_info(message, "three")
+  if not message.text in {"петух", "Петух"}:
+    msg = bot.send_message(message.chat.id, "Неа, но вот посказка: сначала описаны столбцы.")
     bot.register_next_step_handler(msg, questions_third_step)
     return
   team_dict[message.chat.id].step += 1
@@ -167,7 +162,7 @@ def questions_third_step(message):
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
     db.write(s)
   db.close()
-  msg = bot.send_message(message.chat.id, "Верно! После таких записок становится страшновато, правда? Но не волнуйтесь, лучше решите новое задание:")
+  msg = bot.send_message(message.chat.id, "Ага, ку-ка-ре-ку! Ну ладно, перейдем к более серьезным заданиям:")
   bot.send_message(message.chat.id, """\
 Катя и Юра пытаются попасть на планету ВМК.
 Для этого им необходимо пройти ворота с электронным замком.
@@ -200,9 +195,10 @@ def questions_third_step(message):
 
 
 def questions_fourth_step(message):
+  send_info(message, "four")
   if not message.text in {"Юра 8 3 4 5 6 7 1 2", "ключ Юры 8 3 4 5 6 7 1 2", "Ключ Юры 8 3 4 5 6 7 1 2"}:
-    msg = bot.send_message(message.chat.id, "Неверно, подумайте еще.")
-    bot.register_next_step_handler(msg, questions_third_step)
+    msg = bot.send_message(message.chat.id, "Джоан Роулинг сказала мне, что вы ошиблись.")
+    bot.register_next_step_handler(msg, questions_fourth_step)
     return
   team_dict[message.chat.id].step += 1
   db = open("db.txt", "w")
@@ -210,12 +206,13 @@ def questions_fourth_step(message):
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
     db.write(s)
   db.close()
-  msg = bot.send_message(message.chat.id, "Да, Кате прийдется найти себе другой ключ, а Юра пройдет. Вот последнее задание:")
+  msg = bot.send_message(message.chat.id, "Правильно! А теперь финальное задание:")
   bot.send_message(message.chat.id, """\
-Find Honorificabilitudinitatibus in the biggest internet number
-Открой на русском
-Найди ответ на 1.1.4
-Представь каждый символ цифрой
+1) Find 'Honorificabilitudinitatibus' in the biggest internet number
+2) Wiki
+3) Открой книгу на русском на предпросмотр
+4) Найди ответ на 1.1.4
+5) Представь каждый символ цифрой:
 
 0000000010..010000
 0..01000
@@ -231,6 +228,7 @@ Find Honorificabilitudinitatibus in the biggest internet number
 
 
 def questions_fifth_step(message):
+  send_info(message, "five")
   if not message.text in {"вычисления", "Вычисления"}:
     msg = bot.send_message(message.chat.id, "Нет, ПОИЩИТЕ получше.")
     bot.register_next_step_handler(msg, questions_fifth_step)
@@ -240,7 +238,11 @@ def questions_fifth_step(message):
   for key in team_dict:
     s = str(key) + str(team_dict[key].name) + str(team_dict[key].step) + str("\n")
   db.close()
-  bot.send_message(message.chat.id, "Верно! Поздравляю, вы прошли все задания! Увидимся на квесте.")
+  bot.send_message(message.chat.id, """\
+Отлично!
+Теперь я вижу, что вы можете спасти пропавших ребят.
+Приходите 06.04.19 во второй ГУМ к библиотеке к 13:00.
+""")
 
 
 # Enable saving next step handlers to file "./.handlers-saves/step.save".
