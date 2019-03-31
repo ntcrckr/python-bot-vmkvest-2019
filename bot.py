@@ -46,6 +46,7 @@ def register_name_step(message):
   if message.text == None:
     msg = bot.send_message(message.chat.id, "Что-то я не вижу названия...")
     bot.register_next_step_handler(msg, register_name_step)
+    return
   send_info(message, "name")
   team = Team(message.text)
   team_dict[message.chat.id] = team
